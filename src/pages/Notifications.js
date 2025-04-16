@@ -1,15 +1,17 @@
-import React from 'react';
-import "./Notifications.css";
 
-const Notifications = () => {
+import React from 'react';
+
+const NotificationsPanel = () => {
   return (
-    <div className="notifications-panel">
+    <div className="notifications">
       <h3>Notifications</h3>
       <ul>
-        <li>Report #1234 has been marked as Resolved</li>
-        <li>New report submitted in your area</li>
+        <li>New report filed: Homelessness in your area</li>
+        <li>Report resolved: Civic Issue fixed</li>
       </ul>
     </div>
   );
 };
-export default Notifications;
+
+export default NotificationsPanel;
+    

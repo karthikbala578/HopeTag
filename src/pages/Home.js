@@ -23,11 +23,7 @@ const Home = () => {
           <p>Civic Issues</p>
         </div>
       </div>
-      <div className="cta-buttons">
-        <Link to="/report">Report</Link>
-        <Link to="/map">View Map</Link>
-        <Link to="/login">Login</Link>
-      </div>
+      <div className="cta-buttons"> <Link to="/report">Report</Link> <Link to="/map">View Map</Link> <Link to="/login">Login</Link> <Link to="/dashboard">Dashboard</Link> <Link to="/notifications">Notification</Link> </div>
     </div>
   );
 };

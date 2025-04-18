@@ -1,17 +1,29 @@
 .map-view-container {
-    padding: 20px;
-    background-color: #f8fafc;
-  }
-  
-  .filter-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .filter-bar select {
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #94a3b8;
-  }
-  
+  padding: 20px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-bar select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+}
+
+.report-results {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.report-card {
+  background: #f1f5f9;
+  border-left: 4px solid #0284c7;
+  padding: 15px;
+  border-radius: 6px;
+}
+

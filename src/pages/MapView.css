@@ -1,29 +1,104 @@
 .map-view-container {
-  padding: 20px;
+  padding: 16px;
 }
 
 .filter-bar {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .filter-bar select {
   padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  flex: 1;
+  min-width: 150px;
 }
 
 .report-results {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .report-card {
-  background: #f1f5f9;
-  border-left: 4px solid #0284c7;
-  padding: 15px;
-  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
 }
 
+.report-card:hover {
+  transform: scale(1.01);
+}
+
+.report-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  max-height: 180px;
+}
+
+.report-content {
+  padding: 12px;
+}
+
+.status {
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.status.pending {
+  color: orange;
+}
+
+.status.resolved {
+  color: green;
+}
+
+.status.in-progress {
+  color: dodgerblue;
+}
+
+.status.unknown {
+  color: gray;
+}
+
+.reset-btn {
+  margin-top: 16px;
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.reset-btn:hover {
+  background-color: #0056b3;
+}
+
+@media (min-width: 600px) {
+  .report-results {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .report-card {
+    width: calc(50% - 10px);
+  }
+}
+
+@media (min-width: 900px) {
+  .report-card {
+    width: calc(33.33% - 10px);
+  }
+}

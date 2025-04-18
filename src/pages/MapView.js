@@ -1,50 +1,52 @@
-import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebaseconfig';
 import './MapView.css';
 
-const mockReports = [
-  { id: 1, category: "homelessness", status: "pending", description: "Man sleeping outside park entrance", lat: 11.6643, lng: 78.1460 },
-  { id: 2, category: "lost", status: "in-progress", description: "Lost mobile phone near mall", lat: 11.6743, lng: 78.1360 },
-  { id: 3, category: "civic", status: "resolved", description: "Open manhole on 7th Street", lat: 11.6543, lng: 78.1560 },
-  { id: 4, category: "homelessness", status: "resolved", description: "Elderly person helped by NGO", lat: 11.6643, lng: 78.1460 },
-  { id: 5, category: "lost", status: "pending", description: "Lost wallet in the bus station", lat: 11.6750, lng: 78.1470 },
-  { id: 6, category: "civic", status: "in-progress", description: "Street light not working on Kamaraj Road", lat: 11.6890, lng: 78.1580 },
-  { id: 7, category: "homelessness", status: "resolved", description: "Homeless woman receiving help from local NGO", lat: 11.6635, lng: 78.1490 },
-  { id: 8, category: "lost", status: "resolved", description: "Lost backpack near shopping complex", lat: 11.6620, lng: 78.1450 },
-  { id: 9, category: "civic", status: "pending", description: "Broken sidewalk near Salem Junction", lat: 11.6610, lng: 78.1480 },
-  { id: 10, category: "homelessness", status: "in-progress", description: "Man asking for food at main road", lat: 11.6660, lng: 78.1520 },
-];
-
 const MapView = () => {
+  const [reports, setReports] = useState([]);
   const [filters, setFilters] = useState({ category: '', status: '' });
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(12);
 
-  const filteredReports = mockReports.filter((report) => {
+  useEffect(() => {
+    const fetchReports = async () => {
+      const snapshot = await getDocs(collection(db, 'reports'));
+      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setReports(data);
+    };
+    fetchReports();
+  }, []);
+
+  const filteredReports = reports.filter((report) => {
     return (
       (filters.category === "" || report.category === filters.category) &&
       (filters.status === "" || report.status === filters.status)
     );
   });
 
-  const mapContainerStyle = {
-    width: '100%',
-    height: '400px',
-  };
-
-  const defaultCenter = { lat: 11.6643, lng: 78.1460 };
-
-  const center = selectedLocation ? selectedLocation : defaultCenter;
-
   const handleReportClick = (report) => {
-    setSelectedLocation({ lat: report.lat, lng: report.lng });
-    setZoomLevel(17);
+    if (report.location) {
+      setSelectedLocation(report.location);
+      setZoomLevel(17);
+    }
   };
 
   const handleResetView = () => {
     setSelectedLocation(null);
-    setZoomLevel(12); 
+    setZoomLevel(12);
   };
+
+  // Loading Google Maps API
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_GOOGLE_MAP_API_KEY,
+  });
+
+  // If the Google Maps API isn't loaded yet, show loading message
+  if (!isLoaded) {
+    return <p>Loading map...</p>;
+  }
 
   return (
     <div className="map-view-container">
@@ -63,39 +65,45 @@ const MapView = () => {
         </select>
       </div>
 
-      <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={zoomLevel}
-        >
-          {filteredReports.map((report) => (
-            <Marker key={report.id} position={{ lat: report.lat, lng: report.lng }} />
-          ))}
-        </GoogleMap>
-      </LoadScript>
+      <GoogleMap
+        mapContainerStyle={{ height: '300px', width: '100%' }}
+        center={selectedLocation || { lat: 11.6643, lng: 78.1460 }}
+        zoom={zoomLevel}
+      >
+        {filteredReports.map((report) =>
+          report.location ? (
+            <Marker key={report.id} position={report.location} />
+          ) : null
+        )}
+      </GoogleMap>
 
       <div className="report-results">
         {filteredReports.length > 0 ? (
           filteredReports.map((report) => (
-            <div
-              key={report.id}
-              className="report-card"
-              onClick={() => handleReportClick(report)}
-              style={{ cursor: 'pointer' }}
-            >
-              <h4>{report.category.charAt(0).toUpperCase() + report.category.slice(1)}</h4>
-              <p>Status: {report.status}</p>
-              <p>{report.description}</p>
+            <div key={report.id} className="report-card" onClick={() => handleReportClick(report)}>
+              {report.mediaUrl && (
+                <img
+                  src={report.mediaUrl}
+                  alt="Report"
+                  className="report-image"
+                />
+              )}
+              <div className="report-content">
+                <h4>{report.category ? report.category.charAt(0).toUpperCase() + report.category.slice(1) : 'Unknown'}</h4>
+                <p className={`status ${report.status || 'unknown'}`}>
+                  Status: {report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'Unknown'}
+                </p>
+                <p className="description">{report.description}</p>
+              </div>
             </div>
           ))
         ) : (
-          <p style={{ padding: "20px" }}>No reports match your filter.</p>
+          <p className="no-report-message">No reports match your filter.</p>
         )}
       </div>
 
       {selectedLocation && (
-        <button onClick={handleResetView}>Reset View</button>
+        <button className="reset-btn" onClick={handleResetView}>Reset View</button>
       )}
     </div>
   );

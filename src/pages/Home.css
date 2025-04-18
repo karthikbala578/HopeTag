@@ -1,54 +1,67 @@
 .home-container {
-    padding: 20px;
-    text-align: center;
-    background: #f0f9ff;
-    min-height: 100vh;
-  }
-  
-  .home-header {
-    font-size: 2rem;
-    color: #0369a1;
-    margin-bottom: 10px;
-  }
-  
-  .home-mission {
-    font-size: 1rem;
-    color: #334155;
-    margin-bottom: 30px;
-  }
-  
-  .category-icons {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 30px;
-  }
-  
-  .category-icon {
-    text-align: center;
-  }
-  
-  .category-icon img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .category-icon p {
-    margin-top: 5px;
-    font-size: 0.9rem;
-  }
-  
-  .cta-buttons a {
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #0284c7;
-    color: white;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: 0.2s ease;
-  }
-  
-  .cta-buttons a:hover {
-    background-color: #0369a1;
-  }
-  
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.home-header {
+  font-size: 32px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.home-subtext {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.category-grid {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.category-card {
+  width: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f1f1f1;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.category-card img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 5px;
+}
+
+.category-card p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cta-link {
+  background-color: #007BFF;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.cta-link:hover {
+  background-color: #0056b3;
+}

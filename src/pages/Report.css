@@ -1,45 +1,61 @@
 .report-form-container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    background: #e0f2fe;
-    border-radius: 10px;
-  }
-  
-  .report-form-container h2 {
-    color: #0c4a6e;
-    margin-bottom: 20px;
-  }
-  
-  .report-form-container form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .report-form-container select,
-  .report-form-container textarea,
-  .report-form-container input[type="file"] {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-  }
-  
-  .report-form-container label {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-  
-  .report-form-container button {
-    background-color: #0284c7;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .report-form-container button:hover {
-    background-color: #0369a1;
-  }
-  
+  max-width: 500px;
+  margin: auto;
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.report-form label {
+  font-weight: bold;
+  margin-top: 1rem;
+  display: block;
+}
+
+.report-form select,
+.report-form textarea,
+.report-form input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.report-form textarea {
+  min-height: 100px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.map-section {
+  margin-bottom: 1rem;
+}
+
+.map-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 5px;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}

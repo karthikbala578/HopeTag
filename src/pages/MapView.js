@@ -104,7 +104,7 @@ const MapView = () => {
 
       {selectedLocation && (
         <button className="reset-btn" onClick={handleResetView}>Reset View</button>
-      )}
+    )}
     </div>
   );
 };

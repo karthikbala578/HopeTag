@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Report from "./pages/Report";
 import MapView from "./pages/MapView";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import Notifications from "./pages/Notifications";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/report" element={<Report />} />
         <Route path="/map" element={<MapView />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/notifications" element={<Notifications />} />
       </Routes>

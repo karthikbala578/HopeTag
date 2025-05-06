@@ -8,14 +8,13 @@ const Dashboard = () => {
 
       <div className="report-item">
         <p><strong>Issue:</strong> Pothole near 5th Street</p>
-        <button>Claim</button>
+   
         <button>Update</button>
         <button>Resolve</button>
       </div>
 
       <div className="report-item">
         <p><strong>Issue:</strong> Lost bag near bus stop</p>
-        <button>Claim</button>
         <button>Update</button>
         <button>Resolve</button>
       </div>

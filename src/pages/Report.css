@@ -1,61 +1,157 @@
+/* Container for the entire report form */
 .report-form-container {
-  max-width: 500px;
-  margin: auto;
-  padding: 1.5rem;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 2rem;
   background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
 }
 
+.report-form-container:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Label styling */
 .report-form label {
-  font-weight: bold;
-  margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
   display: block;
+  text-transform: capitalize;
 }
 
+/* Inputs, selects, textareas */
 .report-form select,
-.report-form textarea,
-.report-form input[type="file"] {
+.report-form input[type="text"],
+.report-form input[type="email"],
+.report-form input[type="file"],
+.report-form textarea {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 14px;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fafafa;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.report-form select:focus,
+.report-form input[type="text"]:focus,
+.report-form input[type="email"]:focus,
+.report-form input[type="file"]:focus,
+.report-form textarea:focus {
+  border-color: #007bff;
+  background-color: #e9f7ff;
+  outline: none;
 }
 
 .report-form textarea {
-  min-height: 100px;
+  min-height: 120px;
+  resize: vertical;
 }
 
+/* Checkbox styling */
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 1rem;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #555;
 }
 
+.checkbox-label input {
+  margin: 0;
+}
+
+/* Map section styling */
 .map-section {
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .map-hint {
-  font-size: 0.85rem;
-  color: #888;
+  font-size: 0.9rem;
+  color: #777;
   margin-top: 5px;
+  font-style: italic;
 }
 
+/* Submit button styling */
 button[type="submit"] {
   background-color: #007bff;
   color: white;
-  padding: 10px;
+  padding: 15px;
   border: none;
   width: 100%;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
 }
 
 button[type="submit"]:disabled {
-  background-color: #999;
+  background-color: #b0b0b0;
   cursor: not-allowed;
+}
+
+/* Small devices (mobile-first) - form responsiveness */
+@media (min-width: 600px) {
+  .report-form-container {
+    padding: 2.5rem;
+  }
+
+  .report-form label {
+    font-size: 1.2rem;
+  }
+
+  .report-form select,
+  .report-form input[type="text"],
+  .report-form input[type="email"],
+  .report-form input[type="file"],
+  .report-form textarea {
+    font-size: 1.1rem;
+  }
+
+  button[type="submit"] {
+    font-size: 1.2rem;
+  }
+}
+
+/* Medium to large screens (desktops) */
+@media (min-width: 1024px) {
+  .report-form-container {
+    padding: 3rem;
+    max-width: 1000px;
+  }
+
+  .report-form label {
+    font-size: 1.3rem;
+  }
+
+  .report-form select,
+  .report-form input[type="text"],
+  .report-form input[type="email"],
+  .report-form input[type="file"],
+  .report-form textarea {
+    font-size: 1.2rem;
+  }
+
+  button[type="submit"] {
+    font-size: 1.3rem;
+  }
+
+  .map-hint {
+    font-size: 1rem;
+  }
 }

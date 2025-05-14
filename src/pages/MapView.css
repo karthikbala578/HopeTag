@@ -86,6 +86,22 @@
   background-color: #0056b3;
 }
 
+.report-details {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-details h3 {
+  margin-bottom: 10px;
+}
+
+.report-details p {
+  margin: 5px 0;
+}
+
 @media (min-width: 600px) {
   .report-results {
     flex-direction: row;

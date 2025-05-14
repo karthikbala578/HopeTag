@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebaseconfig';
+import { db } from '../config/firebaseconfig.js';
 import './MapView.css';
 
 const MapView = () => {
@@ -9,6 +9,7 @@ const MapView = () => {
   const [filters, setFilters] = useState({ category: '', status: '' });
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(12);
+  const [selectedReport, setSelectedReport] = useState(null); // Store the clicked report for details
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -30,17 +31,24 @@ const MapView = () => {
     if (report.location) {
       setSelectedLocation(report.location);
       setZoomLevel(17);
+      setSelectedReport(report); // Store clicked report for showing details
     }
   };
 
   const handleResetView = () => {
     setSelectedLocation(null);
     setZoomLevel(12);
+    setSelectedReport(null); // Reset selected report
   };
+
+  const formatCreatedAt = (createdAt) => {
+  const date = new Date(createdAt); // Convert ISO 8601 string to Date object
+  return date.toLocaleString(); // Format it as a readable string
+};
 
   // Loading Google Maps API
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_GOOGLE_MAP_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
   });
 
   // If the Google Maps API isn't loaded yet, show loading message
@@ -72,7 +80,7 @@ const MapView = () => {
       >
         {filteredReports.map((report) =>
           report.location ? (
-            <Marker key={report.id} position={report.location} />
+            <Marker key={report.id} position={report.location} onClick={() => handleReportClick(report)} />
           ) : null
         )}
       </GoogleMap>
@@ -94,7 +102,11 @@ const MapView = () => {
                   Status: {report.status ? report.status.charAt(0).toUpperCase() + report.status.slice(1) : 'Unknown'}
                 </p>
                 <p className="description">{report.description}</p>
+            
+              <div>
+               <strong>Issue Time: </strong>{formatCreatedAt(report.createdAt)}
               </div>
+              </div>  
             </div>
           ))
         ) : (
@@ -104,7 +116,18 @@ const MapView = () => {
 
       {selectedLocation && (
         <button className="reset-btn" onClick={handleResetView}>Reset View</button>
-    )}
+      )}
+
+      {/* Display report details with comment */}
+      {selectedReport && (
+        <div className="report-details">
+          <h3>Report Details</h3>
+          <p><strong>Category:</strong> {selectedReport.category}</p>
+          <p><strong>Status:</strong> {selectedReport.status}</p>
+          <p><strong>Description:</strong> {selectedReport.description}</p>
+          <p><strong>Comment:</strong> {selectedReport.comment || 'No comment available'}</p>
+        </div>
+      )}
     </div>
   );
 };

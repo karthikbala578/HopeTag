@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../config/firebaseconfig';
 import './Report.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import Modal from './Modal';
+import { getDistance } from './GetDistance';
 
 const Report = () => {
   const [formData, setFormData] = useState({
@@ -13,12 +15,17 @@ const Report = () => {
     isAnonymous: false,
     status: 'pending',
   });
+
   const [location, setLocation] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [nearestStations, setNearestStations] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [mediaUrl, setMediaUrl] = useState(null);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_GOOGLE_MAP_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
   });
 
   const handleMapClick = (e) => {
@@ -36,7 +43,7 @@ const Report = () => {
 
     setLoading(true);
     const reportId = uuidv4();
-    let mediaUrl = null;
+    let uploadedMediaUrl = null;
 
     if (file) {
       const uploadData = new FormData();
@@ -45,8 +52,12 @@ const Report = () => {
       uploadData.append('public_id', `reports/${reportId}`);
 
       try {
-        const res = await axios.post('https://api.cloudinary.com/v1_1/dlxpkrbvc/image/upload', uploadData);
-        mediaUrl = res.data.secure_url;
+        const res = await axios.post(
+          'https://api.cloudinary.com/v1_1/dlxpkrbvc/image/upload',
+          uploadData
+        );
+        uploadedMediaUrl = res.data.secure_url;
+        setMediaUrl(uploadedMediaUrl);
       } catch (error) {
         console.error('Cloudinary upload error:', error);
         alert('Media upload failed.');
@@ -59,25 +70,81 @@ const Report = () => {
       ...formData,
       location,
       createdAt: new Date().toISOString(),
-      mediaUrl: mediaUrl || null,
+      mediaUrl: uploadedMediaUrl || null,
     };
 
     try {
       await setDoc(doc(collection(db, 'reports'), reportId), reportData);
-      alert('Report submitted successfully!');
-      setFormData({
-        category: '',
-        description: '',
-        isAnonymous: false,
-        status: 'pending',
+
+      await addDoc(collection(db, 'notifications'), {
+        message: `New Report\nCategory: ${formData.category}\nDescription: ${formData.description}`,
+        timestamp: serverTimestamp(),
       });
-      setLocation(null);
-      setFile(null);
+
+      let collectionName;
+      if (formData.category === 'lost') {
+        collectionName = 'policeStations';
+      } else if (formData.category === 'homelessness') {
+        collectionName = 'ngos';
+      } else if (formData.category === 'civic') {
+        collectionName = 'corporations';
+      }
+
+      const snap = await getDocs(collection(db, collectionName));
+      const stationsWithDistances = [];
+
+      snap.forEach((doc) => {
+        const station = doc.data();
+        const dist = getDistance(location.lat, location.lng, station.lat, station.lng);
+        stationsWithDistances.push({ ...station, distance: dist });
+      });
+
+      stationsWithDistances.sort((a, b) => a.distance - b.distance);
+      setNearestStations(stationsWithDistances);
+      setShowModal(true);
     } catch (error) {
-      console.error('Firestore error:', error);
+      console.error('Error submitting report:', error);
       alert('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStationSelection = async (station) => {
+    setSelectedStation(station);
+    setShowModal(false);
+
+    try {
+      const confirmSend = window.confirm(
+        `Do you want to notify the selected ${formData.category}?\n\n${station.name}\n${station.address}`
+      );
+
+      if (confirmSend) {
+        await axios.post('http://localhost:5000/send-email', {
+          to: station.email,
+          subject: `New HopeTag Report: ${formData.category}`,
+          text: `A new ${formData.category} report was submitted.\nDescription: ${formData.description}\nLocation: https://maps.google.com/?q=${location.lat},${location.lng}`,
+          html: `
+            <h3>New ${formData.category} Report Submitted</h3>
+            <p><strong>Description:</strong> ${formData.description}</p>
+            <p><strong>Anonymous:</strong> ${formData.isAnonymous ? 'Yes' : 'No'}</p>
+            <p><strong>Location:</strong> 
+              <a href="https://maps.google.com/?q=${location.lat},${location.lng}" target="_blank">
+                View on Map
+              </a>
+            </p>
+            <p><strong>Attachment:</strong> ${mediaUrl ? `<br/><img src="${mediaUrl}" width="300"/>` : ''}</p>
+          `,
+          mediaUrl,
+        });
+
+        alert(`Notification sent to ${station.name}`);
+      } else {
+        alert('Notification skipped.');
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      alert('Failed to send notification. Please try again.');
     }
   };
 
@@ -106,7 +173,11 @@ const Report = () => {
         />
 
         <label>Attach Photo (optional)</label>
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
 
         <label className="checkbox-label">
           <input
@@ -120,19 +191,27 @@ const Report = () => {
         <div className="map-section">
           <GoogleMap
             mapContainerStyle={{ height: '300px', width: '100%' }}
-            center={location || { lat: 13.0827, lng: 80.2707 }}
-            zoom={14}
+            center={location || { lat: 11.669672, lng: 78.140625 }}
+            zoom={12}
             onClick={handleMapClick}
           >
             {location && <Marker position={location} />}
           </GoogleMap>
-          <p className="map-hint">Click on the map to select location</p>
         </div>
 
         <button type="submit" disabled={loading}>
           {loading ? 'Submitting...' : 'Submit Report'}
         </button>
       </form>
+
+      {showModal && (
+        <Modal
+          stations={nearestStations}
+          category={formData.category}
+          onClose={() => setShowModal(false)}
+          onSelectStation={handleStationSelection}
+        />
+      )}
     </div>
   );
 };

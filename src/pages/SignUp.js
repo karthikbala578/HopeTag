@@ -1,66 +1,70 @@
 import React, { useState } from 'react';
-import { useNavigate,Link } from "react-router-dom";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../config/firebaseconfig';
-
+import { useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { auth, db } from '../config/firebaseconfig';
+import { setDoc, doc } from 'firebase/firestore';
 import './Auth.css';
 
-export default function SignupPage({ switchToLogin }) {
+export default function SignUp() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-        alert('Passwords do not match!');
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert('Signup Successful!');
-        navigate('/login'); // Redirect after signup
-      } catch (error) {
-        alert(error.message);
-      }
+    setLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await sendEmailVerification(user);
+
+      // ✅ Use uid as document ID
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: "user"
+      });
+
+      alert("Sign up successful! Verification email sent.");
+      navigate("/login");
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="auth-container">
-      <form onSubmit={handleSignup} className="auth-form">
-        <h2>Signup</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <button type="submit" className="auth-button">
-          Signup
-        </button>
-        <p>
-          Already have an account? <Link to="/Login" className="auth-link">Login</Link>
-        </p>
-      </form>
-    </div>
-  );
+ return (
+  <div className="auth-container">
+    {loading && (
+      <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    )}
+    <form className={`auth-form ${loading ? 'fade-out' : ''}`} onSubmit={handleSignUp}>
+      <h2>Sign Up</h2>
+      <input
+        className="auth-input"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        required
+      />
+      <input
+        className="auth-input"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        required
+      />
+      <button className="auth-button" type="submit" disabled={loading}>
+        {loading ? 'Creating...' : 'Sign Up'}
+      </button>
+    </form>
+  </div>
+);
+
 }

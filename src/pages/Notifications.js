@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../config/firebaseconfig.js';
 import { collection, getDocs, doc, deleteDoc, writeBatch } from 'firebase/firestore';
 import './Notifications.css';
+import Navbar from '../NavBar/Navbar.js';
 
 const NotificationsPanel = () => {
   const [notifications, setNotifications] = useState([]);
@@ -50,6 +51,8 @@ const NotificationsPanel = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div className="notifications-panel">
       <h3>Notifications</h3>
       {notifications.length > 0 ? (
@@ -78,6 +81,7 @@ const NotificationsPanel = () => {
         <p>No notifications available.</p>
       )}
     </div>
+    </>
   );
 };
 

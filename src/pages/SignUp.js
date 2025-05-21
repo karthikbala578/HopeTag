@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth, db } from '../config/firebaseconfig';
 import { setDoc, doc } from 'firebase/firestore';
-import './Auth.css';
-
+import { showSuccessToast, showErrorToast } from '../Toast/toastUtils.js'
+import './SignUp.css'
 export default function SignUp() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -26,26 +26,34 @@ export default function SignUp() {
         role: "user"
       });
 
-      alert("Sign up successful! Verification email sent.");
+      /* alert("Sign up successful! Verification email sent."); */
+      showSuccessToast("Sign up successful! Verification email sent.");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      /* alert(error.message); */
+      showErrorToast(error.message);
     } finally {
       setLoading(false);
     }
   };
 
  return (
-  <div className="auth-container">
+  <div className="sign-auth-page-container">
+  <div className="sign-auth-box">
     {loading && (
       <div className="loading-spinner-container">
         <div className="loading-spinner"></div>
       </div>
     )}
-    <form className={`auth-form ${loading ? 'fade-out' : ''}`} onSubmit={handleSignUp}>
-      <h2>Sign Up</h2>
+
+    <form
+      className={`sign-auth-form ${loading ? 'fade-out' : ''}`}
+      onSubmit={handleSignUp}
+    >
+      <h2 className="sign-auth-title">Sign Up</h2>
+
       <input
-        className="auth-input"
+        className="sign-auth-input"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -53,18 +61,26 @@ export default function SignUp() {
         required
       />
       <input
-        className="auth-input"
+        className="sign-auth-input"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
         required
       />
-      <button className="auth-button" type="submit" disabled={loading}>
+
+      <button className="sign-auth-button" type="submit" disabled={loading}>
         {loading ? 'Creating...' : 'Sign Up'}
       </button>
+
+      <p className="sign-auth-text">
+        Already have an account?{' '}
+        <Link to="/login" className="sign-auth-link">Login</Link>
+      </p>
     </form>
   </div>
+</div>
+
 );
 
 }

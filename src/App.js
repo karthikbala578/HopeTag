@@ -11,6 +11,7 @@ import SignUp from './pages/SignUp.js';
 import Dashboard from './pages/Dashboard.js';
 import Notifications from './pages/Notifications.js';
 import LoadingSpinner from './pages/LoadingSpinner.js';
+import { ToastContainer } from 'react-toastify';
 
 import './App.css';
 
@@ -47,7 +48,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setShowSpinner(false);
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timer); // Cleanup
   }, [user]);
@@ -57,6 +58,8 @@ function App() {
   }
 
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <Router>
       
 
@@ -74,6 +77,7 @@ function App() {
         <Route path="/notifications" element={<ProtectedRoute>{role === 'admin' ? <Notifications /> : <Navigate to="/" />}</ProtectedRoute>} />
       </Routes>
     </Router>
+    </>
   );
 }
 

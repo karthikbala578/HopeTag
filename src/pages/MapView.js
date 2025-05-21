@@ -3,6 +3,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebaseconfig.js';
 import './MapView.css';
+import Navbar from '../NavBar/Navbar.js';
 
 const MapView = () => {
   const [reports, setReports] = useState([]);
@@ -57,6 +58,8 @@ const MapView = () => {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="map-view-container">
       <div className="filter-bar">
         <select onChange={(e) => setFilters({ ...filters, category: e.target.value })}>
@@ -119,7 +122,7 @@ const MapView = () => {
       )}
 
       {/* Display report details with comment */}
-      {selectedReport && (
+      {/* {selectedReport && (
         <div className="report-details">
           <h3>Report Details</h3>
           <p><strong>Category:</strong> {selectedReport.category}</p>
@@ -127,8 +130,45 @@ const MapView = () => {
           <p><strong>Description:</strong> {selectedReport.description}</p>
           <p><strong>Comment:</strong> {selectedReport.comment || 'No comment available'}</p>
         </div>
-      )}
+      )} */}
+
+        {selectedReport && (
+  <div className="report-modal-overlay">
+    <div className="report-modal">
+      <button className="close-btn" onClick={() => setSelectedReport(null)}>×</button>
+      <center><h2 className='report-head'>Report Details</h2></center>
+      <div className='report-details'>
+
+       <center>
+         <table>
+          <tr>
+            <td><strong>Category:</strong></td>
+            <td>{selectedReport.category}</td>
+          </tr>
+          <tr>
+            <td><strong>Status:</strong> </td>
+            <td>{selectedReport.status}</td>
+          </tr>
+          <tr>
+            <td><strong>Description:</strong> </td>
+            <td>{selectedReport.description}</td>
+          </tr>
+          <tr>
+            <td><strong>Comment:</strong> </td>
+            <td>{selectedReport.comment || 'No comment available'}</td>
+          </tr>
+        </table>
+       </center>
+
+      </div>
+      
     </div>
+  </div>
+)}
+
+
+    </div>
+    </>
   );
 };
 

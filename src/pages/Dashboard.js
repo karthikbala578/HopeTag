@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../config/firebaseconfig.js';
 import './Dashboard.css';
+import Navbar from '../NavBar/Navbar';
+import { showSuccessToast } from '../Toast/toastUtils.js';
+import NoMedia from '../image/nomedia.png'
 
 const Dashboard = () => {
   const [reports, setReports] = useState([]);
@@ -43,7 +46,8 @@ const Dashboard = () => {
       await updateDoc(reportRef, {
         comment: commentText,
       });
-      alert('Comment saved!');
+      /* alert('Comment saved!'); */
+      showSuccessToast('Comment saved')
       setEditedReport(reportId);
     } catch (error) {
       console.error('Failed to save comment:', error);
@@ -61,7 +65,8 @@ const Dashboard = () => {
         ...prev,
         [reportId]: newStatus,
       }));
-      alert('Status updated!');
+      /* alert('Status updated!'); */
+      showSuccessToast('Status Updated');
     } catch (error) {
       console.error('Failed to update status:', error);
     }
@@ -75,6 +80,7 @@ const Dashboard = () => {
     }));
   };
 
+
   // Function to handle status change
   const handleStatusChange = (reportId, event) => {
     const newStatus = event.target.value;
@@ -82,41 +88,43 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <h2>NGO/Govt Dashboard</h2>
+    <>
+    <Navbar/>
+<div className="dashboard-container">
+  <h2 className="dashboard-title">NGO/Govt Dashboard</h2>
 
-      {reports.map((report) => (
-        <div key={report.id} className="report-item">
-          <div>
-            <strong>Issue Time: </strong>{formatCreatedAt(report.createdAt)}
+  {reports.map((report) => (
+    <div key={report.id} className="report-item">
+      <div className="report-content-wrapper">
+        <div className="report-details">
+          <div className="report-row">
+            <div>
+              <strong>Issue Time:</strong> {formatCreatedAt(report.createdAt)}
+            </div>
+            <div>
+              <strong>Category:</strong> {report.category || "Unknown"}
+            </div>
+            <div>
+              <strong>Status : &nbsp;</strong>
+              <select
+                className="status-dropdown"
+                value={selectedStatus[report.id] || report.status || "pending"}
+                onChange={(e) => handleStatusChange(report.id, e)}
+              >
+                <option value="pending" className="status-option pending">Pending</option>
+                <option value="in-progress" className="status-option in-progress">In Progress</option>
+                <option value="resolved" className="status-option resolved">Resolved</option>
+              </select>
+            </div>
           </div>
 
-          <div>
-            <strong>Category: </strong>{report.category || 'Unknown'}
-          </div>
-
-          <div>
-            <strong>Status: </strong>
-            <select
-              value={selectedStatus[report.id] || report.status || 'pending'}
-              onChange={(e) => handleStatusChange(report.id, e)}
-            >
-              <option value="pending">Pending</option>
-              <option value="in-progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-            </select>
-          </div>
-
-          <div>
-            <strong>Description: </strong>{report.description || 'No description available'}
-          </div>
-
-          <div>
-            <img src={report.mediaUrl} alt="Report Media" className="report-image" />
+          <div className="report-description">
+            <strong>Description:</strong> {report.description || "No description available"}
           </div>
 
           <textarea
-            value={comments[report.id] || report.comment || ''}
+            className="comment-box"
+            value={comments[report.id] || report.comment || ""}
             onChange={(e) => handleCommentChange(report.id, e.target.value)}
             placeholder="Add or update comment"
           />
@@ -127,8 +135,25 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-      ))}
+
+        {report.mediaUrl ? (
+          <div className="report-image-container">
+            <img src={report.mediaUrl} alt="Report Media" className="report-image" />
+          </div>
+        )
+          :
+          <div className="report-image-container">
+            <img src={NoMedia} alt="Report Media" className="report-image" />
+          </div>
+        }
+      </div>
     </div>
+  ))}
+</div>
+
+
+
+    </>
   );
 };
 

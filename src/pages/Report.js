@@ -7,6 +7,8 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from './Modal';
 import { getDistance } from './GetDistance';
+import Navbar from '../NavBar/Navbar';
+import { showErrorToast, showSuccessToast } from '../Toast/toastUtils';
 
 const Report = () => {
   const [formData, setFormData] = useState({
@@ -104,7 +106,8 @@ const Report = () => {
       setShowModal(true);
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('Something went wrong. Please try again.');
+      /* alert('Something went wrong. Please try again.'); */
+      showSuccessToast('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -138,20 +141,25 @@ const Report = () => {
           mediaUrl,
         });
 
-        alert(`Notification sent to ${station.name}`);
+        /* alert(`Notification sent to ${station.name}`); */
+        showSuccessToast(`Notification sent to ${station.name}`);
       } else {
-        alert('Notification skipped.');
+        /* alert('Notification skipped.'); */
+        showErrorToast('Notification skipped');
       }
     } catch (error) {
       console.error('Error sending notification:', error);
-      alert('Failed to send notification. Please try again.');
+      /* alert('Failed to send notification. Please try again.'); */
+      showErrorToast('Failed to send notification. Please try again.');
     }
   };
 
   if (!isLoaded) return <p>Loading map...</p>;
 
   return (
-    <div className="report-form-container">
+    <>
+    <Navbar/>
+    {/* <div className="report-form-container">
       <h2>Report an Issue</h2>
       <form onSubmit={handleSubmit} className="report-form">
         <label>Category</label>
@@ -212,7 +220,135 @@ const Report = () => {
           onSelectStation={handleStationSelection}
         />
       )}
+    </div> */}
+
+      <div className="report-page-wide">
+  <h2 className="report-title">Report an Issue</h2>
+
+  <form onSubmit={handleSubmit} className="report-form-wide">
+    
+    {/* <div className="form-group">
+      <label>Category</label>
+      <select
+        value={formData.category}
+        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+      >
+        <option value="">Select Category</option>
+        <option value="homelessness">Homelessness</option>
+        <option value="lost">Lost Item</option>
+        <option value="civic">Civic Issue</option>
+      </select>
+    </div> */}
+
+    <div className="form-group category-select-group">
+  <label htmlFor="category-select">Category</label>
+  <select
+    id="category-select"
+    className="custom-select"
+    value={formData.category}
+    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+  >
+    <option value="">Select Category</option>
+    <option value="homelessness">🏚️ Homelessness</option>
+    <option value="lost">🔍 Lost Item</option>
+    <option value="civic">🏙️ Civic Issue</option>
+  </select>
+</div>
+
+
+    <div className="form-group">
+      <label>Description</label>
+      <textarea
+        placeholder="Describe the issue..."
+        value={formData.description}
+        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+      />
     </div>
+
+    <div className="form-row">
+      {/* <div className="form-group half">
+        <label>Attach Photo (optional)</label>
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+      </div> */}
+
+      <div className="form-group half file-upload-group">
+    <label className="upload-label">Attach Photo (optional)</label>
+
+    <div className="custom-file-upload">
+      <label htmlFor="file-upload" className="file-upload-button">
+        📁 Choose File
+      </label>
+      <span className="file-name">
+        {file ? file.name : 'No file chosen'}
+      </span>
+      <input
+        type="file"
+        id="file-upload"
+        accept="image/*,video/*"
+        onChange={(e) => setFile(e.target.files[0])}
+        className="hidden-file-input"
+      />
+    </div>
+
+    {/* Optional: Preview Image if file is an image */}
+    {file && file.type.startsWith('image/') && (
+      <div className="image-preview">
+        <img src={URL.createObjectURL(file)} alt="Preview" />
+      </div>
+    )}
+  </div>
+
+      <div className="form-group half checkbox-group">
+        <label>
+          <input
+            type="checkbox"
+            checked={formData.isAnonymous}
+            onChange={(e) => setFormData({ ...formData, isAnonymous: e.target.checked })}
+          />
+          Submit Anonymously
+        </label>
+      </div>
+    </div>
+
+    <div className="map-wrapper-wide">
+      <h4 className='map-loc'>Mark Location</h4>
+      
+      <GoogleMap
+        mapContainerStyle={{ height: '350px', width: '100%', borderRadius: '8px' }}
+        center={location || { lat: 11.669672, lng: 78.140625 }}
+        zoom={12}
+        onClick={handleMapClick}
+      >
+        {location && <Marker position={location} />}
+      </GoogleMap>
+    </div>
+
+    <div className="submit-section-wide">
+      <button type="submit" disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Report'}
+      </button>
+    </div>
+  </form>
+
+  {showModal && (
+    <Modal
+      stations={nearestStations}
+      category={formData.category}
+      onClose={() => setShowModal(false)}
+      onSelectStation={handleStationSelection}
+    />
+  )}
+</div>
+
+
+
+
+
+    </>
   );
 };
 

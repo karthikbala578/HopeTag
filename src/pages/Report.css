@@ -1,4 +1,4 @@
-/* Container for the entire report form */
+/* 
 .report-form-container {
   max-width: 900px;
   margin: 40px auto;
@@ -13,7 +13,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* Label styling */
 .report-form label {
   font-weight: 600;
   font-size: 1.1rem;
@@ -23,7 +22,6 @@
   text-transform: capitalize;
 }
 
-/* Inputs, selects, textareas */
 .report-form select,
 .report-form input[type="text"],
 .report-form input[type="email"],
@@ -56,7 +54,6 @@
   resize: vertical;
 }
 
-/* Checkbox styling */
 .checkbox-label {
   display: flex;
   align-items: center;
@@ -70,7 +67,6 @@
   margin: 0;
 }
 
-/* Map section styling */
 .map-section {
   margin-bottom: 2rem;
 }
@@ -82,7 +78,6 @@
   font-style: italic;
 }
 
-/* Submit button styling */
 button[type="submit"] {
   background-color: #007bff;
   color: white;
@@ -105,7 +100,6 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 
-/* Small devices (mobile-first) - form responsiveness */
 @media (min-width: 600px) {
   .report-form-container {
     padding: 2.5rem;
@@ -128,7 +122,6 @@ button[type="submit"]:disabled {
   }
 }
 
-/* Medium to large screens (desktops) */
 @media (min-width: 1024px) {
   .report-form-container {
     padding: 3rem;
@@ -154,4 +147,195 @@ button[type="submit"]:disabled {
   .map-hint {
     font-size: 1rem;
   }
+}
+ */
+
+.report-page-wide {
+  padding: 80px 5%;
+  width: 100%;
+  background-color: #f9f9f9;
+}
+
+.report-title {
+  font-size: 32px;
+  color: #0077b6;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.report-form-wide {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* new */
+.category-select-group {
+  margin-bottom: 1.5rem;
+}
+
+.custom-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  color: #333;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg fill='gray' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: #0077b6;
+  background-color: #fff;
+}
+
+.custom-select:hover {
+  border-color: #0096c7;
+}
+
+
+.half {
+  flex: 1;
+  min-width: 200px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  padding-top: 25px;
+}
+
+.checkbox-group input {
+  margin-right: 8px;
+}
+
+.map-wrapper-wide {
+  margin-top: 20px;
+}
+.map-loc{
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.submit-section-wide {
+  margin-top: 25px;
+}
+
+.submit-section-wide button {
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-section-wide button:hover {
+  background-color: #005f87;
+}
+
+
+
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.form-group.half {
+  flex: 1;
+  min-width: 300px;
+  margin-right: 1rem;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.file-upload-button {
+  /* background-color: #0077b6; */
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  border: 2px solid #0077b6;
+}
+
+.file-upload-button:hover {
+  background-color: #90e0ef;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-name {
+  font-size: 0.95rem;
+  color: #555;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  max-width: 100%;
+}
+
+.image-preview img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }

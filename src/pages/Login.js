@@ -3,14 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, provider, db } from '../config/firebaseconfig.js';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import './Auth.css';
+import './Login.css';
+import { showSuccessToast, showErrorToast } from '../Toast/toastUtils.js'
+import Google from '../image/g-logo.png'
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); // Add loading state
-  const [animationClass, setAnimationClass] = useState(''); // Add state for animation
+  const [loading, setLoading] = useState(false); // Add loading state // Add state for animation
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -21,15 +22,17 @@ export default function Login() {
       const user = userCredential.user;
 
       if (user.emailVerified) {
-        alert('Login Successful!');
-        // Trigger animation
-        setAnimationClass('fade-out');
+        /* alert('Login Successful!'); */
+        showSuccessToast("Login successful!")
+
+        // Trigger animationc
         // Delay navigation for 1.5 seconds to show animation
         setTimeout(() => {
           navigate('/');
         }, 1500); // Delay for 1.5 seconds
       } else {
-        alert('Please verify your email before logging in.');
+       /*  alert('Please verify your email before logging in.'); */
+        showErrorToast('Please verify your email before logging in.');
         await auth.signOut(); // Prevent access if not verified
       }
     } catch (error) {
@@ -60,56 +63,71 @@ export default function Login() {
       alert(`Welcome ${user.displayName}`);
       navigate('/');
     } catch (error) {
-      alert(error.message);
+      /* alert(error.message); */
+      showErrorToast(error.message);
     } finally {
       setLoading(false); // End loading
     }
   };
 
   return (
-    <div className="auth-container">
-      <form onSubmit={handleLogin} className={`auth-form ${animationClass}`}>
-        <h2>Login</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="auth-input"
-          required
-        />
-        <button type="submit" className="auth-button" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-        <p>
-          Don't have an account?{' '}
-          <Link to="/signup" className="auth-link">Signup</Link>
-        </p>
-      </form>
+    <div className="auth-page-container">
+  <div className="auth-box">
+    <form onSubmit={handleLogin} >
+      <h2 className="auth-title">Login</h2>
 
-      <button onClick={handleGoogleSignIn} className="google-sign-in-button light" disabled={loading}>
-        <img
-          src="https://developers.google.com/identity/images/g-logo.png"
-          alt="Google Icon"
-          className="google-icon"
-        />
-        {loading ? 'Signing in with Google...' : 'Sign in with Google'}
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        className="auth-input"
+        required
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="auth-input"
+        required
+      />
+
+      <button type="submit" className="auth-button" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
       </button>
 
-      {/* Loading Spinner */}
-      {loading && (
-        <div className="loading-spinner-container">
-          <div className="loading-spinner"></div>
-        </div>
-      )}
+      <p className="auth-text">
+        Don't have an account?{' '}
+        <Link to="/signup" className="auth-link">Signup</Link>
+      </p>
+    </form>
+
+    <div className="divider">
+      <span>OR</span>
     </div>
+
+    <button
+      onClick={handleGoogleSignIn}
+      className="google-sign-in-button"
+      disabled={loading}
+    >
+      <img
+        src={Google}
+        alt="Google Icon"
+        className="google-icon"
+      />
+      {loading ? 'Signing in with Google...' : 'Sign in with Google'}
+    </button>
+
+    {loading && (
+      <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
+    )}
+  </div>
+</div>
+
   );
 }

@@ -1,4 +1,4 @@
-.home-container {
+/* .home-container {
   padding: 20px;
   max-width: 500px;
   margin: 0 auto;
@@ -66,7 +66,6 @@
   background-color: #0056b3;
 }
 
-/* Logout button styles */
 .logout-button {
   background-color: transparent;
   color: #dc3545;
@@ -83,4 +82,187 @@
 .logout-button:hover {
   color: #c82333;
   transform: scale(1.1);
+}
+ */
+ /* General reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Main Section */
+/* .home-container {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.home-header {
+  font-size: 48px;
+  color: #023e8a;
+  margin-bottom: 20px;
+}
+
+.home-subtext {
+  font-size: 20px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cta-link {
+  background-color: #0077b6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.cta-link:hover {
+  background-color: #0096c7;
+} */
+
+/*  puthusu*/
+.home-container {
+  margin-top: 50px;
+  padding: 20px;
+  text-align: center;
+}
+
+.hero-section {
+  background: linear-gradient(to right, #0077b6, #90e0ef);
+  color: white;
+  padding: 35px 10px;
+  border-radius: 12px;
+  animation: fadeIn 1s ease-in;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-header {
+  font-size: 60px;
+  margin-bottom: 20px;
+  animation: slideInDown 1s ease-in-out;
+}
+
+.home-subtext {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.cta-link {
+  background-color: white;
+  color: #0077b6;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-link:hover {
+  background-color: #023e8a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: 32px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #0077b6;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.info-card {
+  background-color: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+}
+.admin-info-card{
+  max-width: 500px;
+  background-color: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.info-card h3 {
+  margin: 10px 0;
+  color: #023e8a;
+}
+
+
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+
+
+
+
+/* puthusu */
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  
+  .home-header {
+    font-size: 36px;
+  }
+
+  .home-subtext {
+    font-size: 18px;
+  }
 }

@@ -20,7 +20,7 @@ export default function SignUp() {
 
       await sendEmailVerification(user);
 
-      // ✅ Use uid as document ID
+      
       await setDoc(doc(db, "users", user.uid), {
         email: user.email,
         role: "user"
@@ -51,7 +51,6 @@ export default function SignUp() {
       onSubmit={handleSignUp}
     >
       <h2 className="sign-auth-title">Sign Up</h2>
-
       <input
         className="sign-auth-input"
         type="email"

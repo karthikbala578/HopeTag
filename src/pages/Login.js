@@ -33,7 +33,7 @@ export default function Login() {
       } else {
        /*  alert('Please verify your email before logging in.'); */
         showErrorToast('Please verify your email before logging in.');
-        await auth.signOut(); // Prevent access if not verified
+        await auth.signOut(); 
       }
     } catch (error) {
       alert(error.message);
@@ -48,19 +48,19 @@ export default function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Save role & email in Firestore if not already present
+     
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        // If user is not in Firestore, add them with default 'user' role
+        
         await setDoc(userRef, {
           email: user.email,
           role: 'user', // default role
         });
       }
-
-      alert(`Welcome ${user.displayName}`);
+      showSuccessToast(`Welcome ${user.displayName}`);
+      /* alert(`Welcome ${user.displayName}`); */
       navigate('/');
     } catch (error) {
       /* alert(error.message); */
